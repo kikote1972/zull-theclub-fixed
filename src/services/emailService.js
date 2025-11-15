@@ -1,31 +1,12 @@
 import emailjs from '@emailjs/browser';
 
 // Configuración de EmailJS
-const CLUB_NAME = import.meta.env.VITE_CLUB_NAME || 'zull';
-
-// Obtener credenciales según la asociación
-const getEmailConfig = () => {
-  if (CLUB_NAME === 'elipse') {
-    return {
-      SERVICE_ID: import.meta.env.VITE_ELIPSE_EMAILJS_SERVICE_ID,
-      TEMPLATE_ID: import.meta.env.VITE_ELIPSE_EMAILJS_TEMPLATE_ID,
-      PUBLIC_KEY: import.meta.env.VITE_ELIPSE_EMAILJS_PUBLIC_KEY,
-      CLUB_DISPLAY_NAME: 'Asociación Elipse'
-    };
-  }
-  // Por defecto: Zull The Club
-  return {
-    SERVICE_ID: import.meta.env.VITE_ZULL_EMAILJS_SERVICE_ID,
-    TEMPLATE_ID: import.meta.env.VITE_ZULL_EMAILJS_TEMPLATE_ID,
-    PUBLIC_KEY: import.meta.env.VITE_ZULL_EMAILJS_PUBLIC_KEY,
-    CLUB_DISPLAY_NAME: 'Zull The Club'
-  };
-};
-
-const config = getEmailConfig();
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
 // Inicializar EmailJS
-emailjs.init(config.PUBLIC_KEY);
+emailjs.init(PUBLIC_KEY);
 
 /**
  * Envía un correo electrónico con el código QR al socio registrado
@@ -43,13 +24,13 @@ export const sendMembershipEmail = async ({ toEmail, toName, memberId, qrCodeDat
       to_name: toName,
       member_id: memberId,
       qr_code: qrCodeDataURL,
-      club_name: config.CLUB_DISPLAY_NAME,
-      message: `¡Bienvenido a ${config.CLUB_DISPLAY_NAME}! Tu número de socio es: ${memberId}. Guarda este código QR para acceder al club.`
+      club_name: 'Zull The Club',
+      message: `¡Bienvenido a Zull The Club! Tu número de socio es: ${memberId}. Guarda este código QR para acceder al club.`
     };
 
     const response = await emailjs.send(
-      config.SERVICE_ID,
-      config.TEMPLATE_ID,
+      SERVICE_ID,
+      TEMPLATE_ID,
       templateParams
     );
 

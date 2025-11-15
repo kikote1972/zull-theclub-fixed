@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ref, push, set } from 'firebase/database';
 import { database } from '../firebase';
 import QRCode from 'qrcode';
+import { sendMembershipEmail } from '../services/emailService';
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -40,6 +41,20 @@ function RegisterPage() {
       const qr = await QRCode.toDataURL(newMemberId);
       setQrCode(qr);
       setMemberId(newMemberId);
+
+            // Enviar email con QR code
+      const emailResult = await sendMembershipEmail({
+        toEmail: formData.email,
+        toName: formData.nombre,
+        memberId: newMemberId,
+        qrCodeDataURL: qr
+      });
+      
+      if (emailResult.success) {
+        console.log('Email enviado exitosamente');
+      } else {
+        console.error('Error al enviar email, pero el registro fue exitoso');
+      }
     } catch (error) {
       console.error('Error al registrar:', error);
       alert('Error al registrar. Por favor intenta de nuevo.');
